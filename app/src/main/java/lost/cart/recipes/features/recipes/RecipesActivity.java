@@ -2,6 +2,8 @@ package lost.cart.recipes.features.recipes;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,10 +18,12 @@ import lost.cart.recipes.data.local.models.Recipe;
 import lost.cart.recipes.data.remote.recipes.RecipesHelper;
 import lost.cart.recipes.features.base.BaseActivity;
 import test.base.lost.com.baselibrary.LostBasePresenter;
-import timber.log.Timber;
 
 public class RecipesActivity extends BaseActivity implements RecipesPresenter.View {
     @Bind(R.id.recipes_edittext_search) EditText searchEditText;
+    @Bind(R.id.recipes_recyclerview_recipes) RecyclerView recipesRecyclerView;
+
+    private RecipesAdapater recipesAdapater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,9 @@ public class RecipesActivity extends BaseActivity implements RecipesPresenter.Vi
     }
     @Override
     protected void initialiseView() {
+        recipesAdapater = new RecipesAdapater();
+        recipesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recipesRecyclerView.setAdapter(recipesAdapater);
     }
     @Override
     public Observable<CharSequence> onSearchTermChangedObservable() {
@@ -44,7 +51,7 @@ public class RecipesActivity extends BaseActivity implements RecipesPresenter.Vi
 
     @Override
     public void showRecipes(List<Recipe> recipes) {
-        Timber.d(recipes.toString());
+        recipesAdapater.setRecipes(recipes);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package lost.cart.recipes.features.recipes;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -40,26 +41,29 @@ public class RecipesPresenter extends BasePresenter<RecipesPresenter.View> {
     }
 
     private void getRecipes(CharSequence searchTerm) {
-        String searchString = searchTerm.toString();
-
         // Discard any previous searches that are happening
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
 
-        // Make a search with the given searchTerm
-        disposable = recipesHelper.getRecipes(searchString)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        results -> getView().showRecipes(results),
-                        error -> {
-                            String errorMessage = error.getLocalizedMessage();
-                            getView().showError(errorMessage);
-                            Timber.e("Error getting recipes :" + errorMessage);
-                        }
-                );
-        unsubscribeOnDetach(disposable);
+        String searchString = searchTerm.toString();
+
+        // Only search if the search term isn't empty
+        if (!TextUtils.isEmpty(searchString)) {
+            // Make a search with the given searchTerm
+            disposable = recipesHelper.getRecipes(searchString)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            results -> getView().showRecipes(results),
+                            error -> {
+                                String errorMessage = error.getLocalizedMessage();
+                                getView().showError(errorMessage);
+                                Timber.e("Error getting recipes :" + errorMessage);
+                            }
+                    );
+            unsubscribeOnDetach(disposable);
+        }
     }
 
     public interface View extends BasePresenter.View {

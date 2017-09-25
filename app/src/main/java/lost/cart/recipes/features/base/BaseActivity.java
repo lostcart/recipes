@@ -1,7 +1,6 @@
 package lost.cart.recipes.features.base;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import test.base.lost.com.baselibrary.LostBaseActivity;
 import test.base.lost.com.baselibrary.LostBasePresenter;
