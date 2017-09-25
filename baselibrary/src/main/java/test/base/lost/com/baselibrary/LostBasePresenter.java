@@ -41,7 +41,7 @@ public abstract class LostBasePresenter<V extends LostBasePresenter.View> {
     }
 
     @CallSuper
-    protected void subscribe(@NonNull final Disposable disposable) {
+    protected void unsubscribeOnDetach(@NonNull final Disposable disposable) {
         if (compositeDisposable == null) {
             compositeDisposable = new CompositeDisposable();
         }
